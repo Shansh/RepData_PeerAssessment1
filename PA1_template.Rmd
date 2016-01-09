@@ -60,9 +60,20 @@ print(paste0("The 5-minute interval that, on average, contains the maximum numbe
 ```
 
 ## Imputing missing values
+
+Count of missing values in the data set is
 ```{r echo=TRUE}
 sum(is.na(data))
+```
+Count of missing values in the steps column is
+```{r echo=TRUE}
 sum(is.na(data$steps))
+```
+Therefore, all NA's are placed in steps column.
+
+The strategy for imputing missing values was to replace NA's with the mean for that 5-minute interval. 
+```{r echo=TRUE}
+
 
 for (i in 1:dim(data)[1]) {
         if (is.na(data$steps[i])) {

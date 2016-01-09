@@ -109,6 +109,8 @@ print(paste0("The 5-minute interval that, on average, contains the maximum numbe
 
 ## Imputing missing values
 
+Count of missing values in the data set is
+
 ```r
 sum(is.na(data))
 ```
@@ -116,6 +118,7 @@ sum(is.na(data))
 ```
 ## [1] 2304
 ```
+Count of missing values in the steps column is
 
 ```r
 sum(is.na(data$steps))
@@ -124,6 +127,9 @@ sum(is.na(data$steps))
 ```
 ## [1] 2304
 ```
+Therefore, all NA's are placed in steps column.
+
+The strategy for imputing missing values was to replace NA's with the mean for that 5-minute interval. 
 
 ```r
 for (i in 1:dim(data)[1]) {
@@ -146,7 +152,7 @@ hist(sum_spd_na$sum, breaks = 5, xlab="Steps",
 abline(v = mean_spd_na, col = "blue", lwd = 2)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
 
 ```r
 print(paste0("Mean of total number of steps taken per day is (missing data imputed) ", round(mean_spd_na, 2)))
@@ -183,7 +189,7 @@ xyplot(data$steps ~ data$interval | data$workday,
        layout=c(1,2), type = "l")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
 
 ```r
 print("On weekdays people start making personal movements earlier than on weekend and frequencies of steps are more intensive.")

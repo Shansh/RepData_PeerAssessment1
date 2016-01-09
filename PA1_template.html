@@ -128,10 +128,14 @@ text(x, y + 10, labels = paste(round(y, 0), &quot; steps ~ &quot;, x, &quot; int
 </div>
 <div id="imputing-missing-values" class="section level2">
 <h2>Imputing missing values</h2>
+<p>Count of missing values in the data set is</p>
 <pre class="r"><code>sum(is.na(data))</code></pre>
 <pre><code>## [1] 2304</code></pre>
+<p>Count of missing values in the steps column is</p>
 <pre class="r"><code>sum(is.na(data$steps))</code></pre>
 <pre><code>## [1] 2304</code></pre>
+<p>Therefore, all NA’s are placed in steps column.</p>
+<p>The strategy for imputing missing values was to replace NA’s with the mean for that 5-minute interval.</p>
 <pre class="r"><code>for (i in 1:dim(data)[1]) {
         if (is.na(data$steps[i])) {
                 int &lt;- data[i, 3]
