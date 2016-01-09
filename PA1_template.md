@@ -1,35 +1,59 @@
----
-title: "Personal movement analysis using activity monitoring devices"
-author: "Shansh"
-date: "Friday, January 08, 2016"
-output:
-  html_document:
-    keep_md: yes
----
+# Personal movement analysis using activity monitoring devices
+Shansh  
+Friday, January 08, 2016  
 
 This document represents response on the issues raised in assignment from Coursera Reproducible Research Course Project 1. The document was created as R Markdown file and subsequently processed with 'knit2html()' function.
 
-```{r setup}
+
+```r
 library(knitr)
 opts_knit$set(root.dir = "C:/Documents and Settings/Administrator/My Documents/R/")
 ```
 
 ## Loading and preprocessing the data
-```{r echo=TRUE}
+
+```r
 temp <- tempfile()
 download.file("http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip",temp, mode="wb")
 con <- unz(temp, "activity.csv")
 data <- read.table(con, header = TRUE, sep=",")
 unlink(temp)
 print(paste0("There are ", sum(is.na(data)), " NA's in dataset"))
+```
+
+```
+## [1] "There are 2304 NA's in dataset"
+```
+
+```r
 data_cc <- data[complete.cases(data), ]
 print(paste0("There are ", dim(data_cc)[1], " complete cases in dataset"))
 ```
 
-## What is mean total number of steps taken per day?
-```{r, echo=TRUE}
-library(dplyr)
+```
+## [1] "There are 15264 complete cases in dataset"
+```
 
+## What is mean total number of steps taken per day?
+
+```r
+library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 sum_spd <- summarise(group_by(data_cc, date),
                  sum=sum(steps))
 
@@ -39,13 +63,29 @@ median_spd <- median(sum_spd$sum)
 hist(sum_spd$sum, breaks = 5, xlab="Steps", 
      main = "Histogram of total number of steps taken per day")
 abline(v = mean_spd, col = "blue", lwd = 2)
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
+```r
 print(paste0("Mean of total number of steps taken per day is ", round(mean_spd, 2)))
+```
+
+```
+## [1] "Mean of total number of steps taken per day is 10766.19"
+```
+
+```r
 print(paste0("Median of total number of steps taken per day is ", median_spd))
 ```
 
+```
+## [1] "Median of total number of steps taken per day is 10765"
+```
+
 ## What is the average daily activity pattern?
-```{r echo=TRUE}
+
+```r
 mean_int <- summarise(group_by(data_cc, interval),
                       mean = mean(steps))
 
@@ -55,15 +95,37 @@ plot(mean_int$mean ~ mean_int$interval, type = "l",
      ylim = c(-5, 250), ylab = "Number of steps", xlab = "Interval",
      main = "Average steps of 5-minute intervals") 
 text(x, y + 10, labels = paste(round(y, 0), " steps ~ ", x, " interval"))
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
 print(paste0("The 5-minute interval that, on average, contains the maximum number of steps is ", x))
 ```
 
-## Imputing missing values
-```{r echo=TRUE}
-sum(is.na(data))
-sum(is.na(data$steps))
+```
+## [1] "The 5-minute interval that, on average, contains the maximum number of steps is 835"
+```
 
+## Imputing missing values
+
+```r
+sum(is.na(data))
+```
+
+```
+## [1] 2304
+```
+
+```r
+sum(is.na(data$steps))
+```
+
+```
+## [1] 2304
+```
+
+```r
 for (i in 1:dim(data)[1]) {
         if (is.na(data$steps[i])) {
                 int <- data[i, 3]
@@ -82,14 +144,30 @@ median_spd_na <- median(sum_spd_na$sum)
 hist(sum_spd_na$sum, breaks = 5, xlab="Steps", 
      main = "Histogram of total number of steps taken per day")
 abline(v = mean_spd_na, col = "blue", lwd = 2)
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
 print(paste0("Mean of total number of steps taken per day is (missing data imputed) ", round(mean_spd_na, 2)))
+```
+
+```
+## [1] "Mean of total number of steps taken per day is (missing data imputed) 10766.19"
+```
+
+```r
 print(paste0("Median of total number of steps taken per day is (missing data imputed) ", round(median_spd_na, 2)))
+```
+
+```
+## [1] "Median of total number of steps taken per day is (missing data imputed) 10766.19"
 ```
 Mean and median values of the new data set, with missing data imputed, look very much the same as those from data set where missing values has been removed. In the new histogram frequency of middle break has increased, due to strategy of imputation of missing values (mean for that 5-minute interval).
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r echo=TRUE}
+
+```r
 library(lattice) 
 
 data$date <- as.Date(data$date)
@@ -103,6 +181,14 @@ xyplot(data$steps ~ data$interval | data$workday,
        xlab = "Interval",
        ylab = "Number of steps",
        layout=c(1,2), type = "l")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
+
+```r
 print("On weekdays people start making personal movements earlier than on weekend and frequencies of steps are more intensive.")
+```
+
+```
+## [1] "On weekdays people start making personal movements earlier than on weekend and frequencies of steps are more intensive."
 ```
